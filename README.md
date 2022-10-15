@@ -1,9 +1,17 @@
 # myGoogleCalendar
 This is to port over my shifts from Target into my personal Google Calendar.
 
+Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
+
+# How does this work?
+
+As far as I know, Target does not and has not released APIs into the public to grab a TMs schedule. So in order to do this, we will emulate a user looking at their schedule, Grab all the data we need. and throw it to the Google Calendar API. From there its done! 
+
+To ensure your shifts are always the most recent onces, on every run it is going to delete any shifts it might have preivously added and readd them in. This makes sure that if a time or a workcentre changes, You're still good to go. 
+
+
 # **READ THIS BEFORE COMPILING**. 
 
-Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
 
 
 Goto [console.cloud.google.com](https://console.cloud.google.com/)
@@ -39,4 +47,23 @@ Give it a shot and compile it.
 
 If it fails. Try to add chromedriver to your windows path. 
 
+# Why is it asking for my Google?
+
+Since we are using the Google Calendar API we need to go thru google to get the required tokens to use those APIs.
+
+# IS THIS A WIRUS?
+
+You will see this screen
+
+![2022-10-15 02_17_20-Sign in - Google Accounts](https://user-images.githubusercontent.com/37282503/195978955-6b12cbca-b991-4bfa-ae2e-4012f044bb0c.png)
+
+All this is saying is that the application that you made is still in testing mode. Google has not verified verifcation is if you want to make this a widespread thing where random users will use this. You're more than welcome to verify it thru google but you're wasting your time. Hit continue. 
+
+And you're done!
+
+In theory your Google Calendar is getting filled with your target shifts. 
+
 I'm trying to tinker with headless mode. Would be really convenient. 
+
+
+
