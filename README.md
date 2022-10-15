@@ -1,18 +1,18 @@
 # myGoogleCalendar
 This is to port over my shifts from Target into my personal Google Calendar.
-# Read me!
+
+# **READ THIS BEFORE COMPILING**. 
+
 Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
 
 
 Goto [console.cloud.google.com](https://console.cloud.google.com/)
 
-Make a new project, either goto the top and hit select a project or hit create a project on the main screen.
+https://youtu.be/c2b2yUNWFzI?t=225 this is a great video explaining the setting up the OAuth for Google Calendar. Watch till ~10 minutes 
 
+Once you create your OAuth, click download JSON. Drop it into the main directory of your working directory.
 
-
-
-
-I'll elaborate on this later. 
+Rename the file **"credentials.json"**
 
 # I dropped in the API, now what? 
 I'm glad you asked. Now goto the config.cfg file in the main directory and change the info in there to match your Target information. Such as your TM ID, and passcode.
