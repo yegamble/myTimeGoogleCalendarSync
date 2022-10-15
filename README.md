@@ -33,4 +33,10 @@ Time Offset. This part is a bit annoying, the best advice I can give is to look 
 
 THIS IS IMPORTANT. Do NOT forget to put the 0 first! If you do -5:00 instead of -05:00 the code will NOT work. 
 
+Now that everything is setup. run ```pip install -r requirements.txt``` and it will install all the requirements needed! (surprisingly a very little amount) 
+
+Give it a shot and compile it. 
+
+If it fails. Try to add chromedriver to your windows path. 
+
 I'm trying to tinker with headless mode. Would be really convenient. 
