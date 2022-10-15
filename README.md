@@ -3,6 +3,15 @@ This is to port over my shifts from Target into my personal Google Calendar.
 # Read me!
 Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
 
+
+Goto [console.cloud.google.com](https://console.cloud.google.com/)
+
+Make a new project, either goto the top and hit select a project or hit create a project on the main screen.
+
+
+
+
+
 I'll elaborate on this later. 
 
 # I dropped in the API, now what? 
