@@ -6,6 +6,8 @@
 
 import configparser
 import time
+import sys
+
 
 import undetected_chromedriver as uc
 from selenium.common.exceptions import TimeoutException
@@ -14,6 +16,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 import os.path
+import os
 # GOOGLE SHIT
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -22,10 +25,19 @@ from googleapiclient.discovery import build
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 
+
+
+# config.read('creds.cfg')
+
+base_path = os.path.dirname(os.path.realpath(__file__))
+config = configparser.RawConfigParser()
+config.read(os.path.join(base_path, 'creds.cfg'))
+
+
+
 # alot of libraries. esp for my first python project lol.
 createEvent = True
-config = configparser.ConfigParser()
-config.read('creds.cfg')
+
 creds = None
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 options = uc.ChromeOptions()
@@ -34,6 +46,7 @@ if config['options']['headless'] == 'True':
 	options.headless = True
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--incognito")
 options.add_argument("--disable-extensions")
 options.add_argument("--enable-automation")
 options.add_argument("--disable-browser-side-navigation")
@@ -52,6 +65,10 @@ options.add_experimental_option(
     },
 )
 
+print('- Finished importing packages')
+
+
+
 
 # Some code I found on GFG.
 # https://www.geeksforgeeks.org/python-program-convert-time-12-hour-24-hour-format/
@@ -59,7 +76,8 @@ def convert24(str1):
     # Checking if last two elements of time
     # is AM and first two elements are 12
     if str1[-2:] == "AM" and str1[:2] == "12":
-        return "00:00 AM"
+        return "23:59 PM"
+    # if your event is
 
     # remove the AM
     elif str1[-2:] == "AM":
@@ -108,24 +126,26 @@ loginButton = browser.find_element(By.ID, 'submit-button')
 loginButton.submit()
 time.sleep(1.5)
 # choose to answer security questions
-browser.save_screenshot('ss1.png')
+# Use this for debugging
+# browser.save_screenshot('ss1.png')
 print("Checking for QnA Button!")
 x = 0
-while "quickly verify" not in browser.page_source:
-    time.sleep(0.3)
-    x = x + 1
-    if x > 30:
-        browser.save_screenshot('ss.png')
-        print("Timed out waiting for 2FA to show up")
-        browser.quit()
+
+browser.save_screenshot('debug.png')
+
+time.sleep(2)
+
 
 print("Button found!")
 
 
+
+# FOr some reason, Fingerprint is brokebn on my account and I do not feel like calling CSC.
+# diable this if you need to.
+time.sleep(1)
 browser.find_element(By.XPATH, '//*[contains(text(), "Q&A")]').click()
 # this took me so fucking long for no reason
 # I was using the chrome one and it sucked compared to a simple Chrome extension
-
 time.sleep(1)
 
 try:
@@ -176,6 +196,10 @@ positionLoc = '//*[@id="0"]/li/div/div[3]/div[1]/a/div/div[4]/div/p'
 time.sleep(2)
 
 # ------------------------------ GCAL SETUP -------------------------------------------
+
+os.chdir("/home/gabe/workCal")
+
+
 if os.path.exists('token.json'):
     creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 # If there are no (valid) credentials available, let the user log in.
@@ -203,7 +227,7 @@ while rerun:
 
     if i != 0:
         print("Going to the next week!")
-        browser.find_element(By.XPATH, '//*[@id="root"]/div[1]/div/div[2]/div[1]/div[3]/button').click()
+        browser.find_element(By.XPATH, '//*[@id="root"]/div[1]/div/div/div[1]/div[3]/button').click()
         # This takse us to the next week
         time.sleep(2.5)
 
@@ -217,23 +241,22 @@ while rerun:
         print("Timed out waiting for next page to load")
         browser.close()
 
-    date = browser.find_element(By.ID, '0').get_attribute("outerHTML")
-    startYear = date[46:50]
-    startMonth = date[51:53]
-    startDay = date[54:56]
-
-    date = browser.find_element(By.ID, '6').get_attribute("outerHTML")
-    endYear = date[46:50]
-    endMonth = date[51:53]
-    endDay = date[54:56]
-    # this is to set up the start and the end times of the search to make sure we don't go too far since we don't need to. we're going week by week.
-    sTime = startYear + "-" + startMonth + "-" + startDay + "T" + "00:00:00" + config['options']['timeOffset']
-    eTime = endYear + "-" + endMonth + "-" + endDay + "T" + "23:59:00" + config['options']['timeOffset']
     rerun = False
     for x in range(7):
-        strX = str(x)
-        shiftStart = "no"
-        shiftEnd = "no"
+        date = browser.find_element(By.ID, '0').get_attribute("outerHTML")
+        startYear = date[46:50]
+        startMonth = date[51:53]
+        startDay = date[54:56]
+
+        date = browser.find_element(By.ID, '6').get_attribute("outerHTML")
+        endYear = date[46:50]
+        endMonth = date[51:53]
+        endDay = date[54:56]
+
+        # this is to set up the start and the end times of the search to make sure we don't go too far since we don't need to. we're going week by week.
+        sTime = startYear + "-" + startMonth + "-" + startDay + "T" + "00:00:00" + config['options']['timeOffset']
+        eTime = endYear + "-" + endMonth + "-" + endDay + "T" + "23:59:00" + config['options']['timeOffset']
+
         # It would freak out if you tried to output an empty string.
 
         xNum = str(x)
@@ -242,9 +265,11 @@ while rerun:
         checkDate2 = endTimeLoc[0:9] + xNum + endTimeLoc[10:48]
         checkPos = positionLoc[0:9] + xNum + positionLoc[10:52]
         # I thought I was a jenius for this
+
         for shiftStart in browser.find_elements(By.XPATH, checkDate1):
             for shiftEnd in browser.find_elements(By.XPATH, checkDate2):
                 for JobTitle in browser.find_elements(By.XPATH, checkPos):
+
                     rerun = True
                     jTitle = JobTitle.text
                     desc = 'You are being requested to work a shift of ' + JobTitle.text + ' at Target Corperation'
@@ -264,6 +289,7 @@ while rerun:
                             config['options'][
                                 'timeOffset']
 
+
                     searchStartTime = year + "-" + month + "-" + day + "T" + "00:00:00" + \
                                       config['options'][
                                           'timeOffset']
@@ -281,7 +307,7 @@ while rerun:
                     for event in events:
                         if event['summary'] == config['options']['nameOfEvent'] and event['start'][
                             'dateTime'] == sTime and event['end']['dateTime'] == eTime:
-                            print("MATCH! Existing shift found in GCal. Ignoring....")
+                            print("Existing shift found in GCal. Ignoring....")
                             createEvent = False
                             break
                         elif event['summary'] == config['options']['nameOfEvent'] and (event['start'][
@@ -290,7 +316,7 @@ while rerun:
                                                                                            'dateTime'] != eTime):
                             # This checks to see if something already exists in the calendar. If the label is
                             # matching but the times are wrong then they update.
-                            print("existing item found but with differences.... Updating...")
+                            print("existing item found but with differences... Updating...")
                             event['description'] = desc
                             event['start']['dateTime'] = sTime
                             event['end']['dateTime'] = eTime
@@ -301,7 +327,6 @@ while rerun:
 
                     if createEvent:
                         # Start times and the end times for that shift.
-                        
                         event = {
                             'summary': config['options']['nameOfEvent'],
                             'location': config['secrets']['storeAddy'],
