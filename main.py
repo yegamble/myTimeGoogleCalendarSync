@@ -136,27 +136,38 @@ browser.save_screenshot('debug.png')
 time.sleep(2)
 
 
-print("Button found!")
+
 
 
 
 # FOr some reason, Fingerprint is brokebn on my account and I do not feel like calling CSC.
 # diable this if you need to.
 time.sleep(1)
-browser.find_element(By.XPATH, '//*[contains(text(), "Q&A")]').click()
+
+print("Attending to click more options dropdown....")
+
+browser.find_element(By.XPATH, '//*[contains(text(), "More Options")]').click()
+
+print("Dropped Down! waiting...")
+time.sleep(1)
+browser.save_screenshot('Dropdown.png')
+print("Finding Q&A Button....")
 # this took me so fucking long for no reason
 # I was using the chrome one and it sucked compared to a simple Chrome extension
+
+browser.find_element(By.XPATH, '//*[contains(text(), "Q&A")]').click()
+
 time.sleep(1)
 
 try:
     element_present = EC.presence_of_element_located(
-        (By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/form/div/div[1]/div/div/div/div[1]/p'))
+        (By.ID, 'q-input'))
     WebDriverWait(browser, 10).until(element_present)
 except TimeoutException:
+    browser.save_screenshot('Exception Security.png')
     print("Timed out waiting for Security question to show up")
     browser.close()
 time.sleep(2)
-browser.save_screenshot('ss1.png')
 qIn = browser.find_element(By.ID, 'q-input')
 qIn.click()
 # Finds the question input
