@@ -7,7 +7,7 @@ Hello all! I am using the Google Calendar API for this. If you would like to use
 
 As far as I know, Target does not and has not released APIs into the public to grab a TMs schedule. So in order to do this, we will emulate a user looking at their schedule, Grab all the data we need. and throw it to the Google Calendar API. From there its done! 
 
-To ensure your shifts are always the most recent onces, on every run it is going to delete any shifts it might have preivously added and readd them in. This makes sure that if a time or a workcentre changes, You're still good to go. 
+To ensure your shifts are always the most recent onces, on every run it is going to verify any previous shifts added and change them if needed. This makes sure that if a time or a workcentre changes, You're still good to go. 
 
 
 # **READ THIS BEFORE COMPILING**. 
@@ -63,7 +63,6 @@ And you're done!
 
 In theory your Google Calendar is getting filled with your target shifts. 
 
-I'm trying to tinker with headless mode. Would be really convenient. 
 
 
-
+This program is fully supported in headless mode! If you want to run this program in headless mode change the headless button in the config and you're all set! 
