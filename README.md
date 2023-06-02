@@ -1,7 +1,7 @@
 # myGoogleCalendar
 
 
-NOTE: AD OF 6/2/2023 TARGET HAS DISABLED LOGGING IN WITH A SECURITY QUESTION. 
+NOTE: AS OF 6/2/2023 TARGET HAS DISABLED LOGGING IN WITH A SECURITY QUESTION. 
 You are more than welcome to fork this and figure out your own custom way to use this code. 
 
 
