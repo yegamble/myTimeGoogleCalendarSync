@@ -1,4 +1,10 @@
 # myGoogleCalendar
+
+
+NOTE: AD OF 6/2/2023 TARGET HAS DISABLED LOGGING IN WITH A SECURITY QUESTION. 
+You are more than welcome to fork this and figure out your own custom way to use this code. 
+
+
 A simple program to copy my shifts from Target myTime to Google Calendar. 
 
 Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
