@@ -1,17 +1,14 @@
 # myGoogleCalendar
 
-
-NOTE: AS OF 6/2/2023 TARGET HAS DISABLED LOGGING IN WITH A SECURITY QUESTION. 
-You are more than welcome to fork this and figure out your own custom way to use this code. 
-
+You can authenticate by using the 2FA authenticator code
 
 A simple program to copy my shifts from Target myTime to Google Calendar. 
 
-Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a google Auth Key. 
+Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a Google Auth Key. 
 
 # How does this work?
 
-As far as I know, Target does not and has not released APIs into the public to grab a TMs schedule. So in order to do this, we will emulate a user looking at their schedule, Grab all the data we need. and throw it to the Google Calendar API. From there its done! 
+This code will authenticate you, save your token, and call the WFM API which allows this script to be ran multiple times whilst keeping the same token.
 
 To ensure your shifts are always the most recent onces, on every run it is going to verify any previous shifts added and change them if needed. This makes sure that if a time or a workcentre changes, You're still good to go. 
 
@@ -29,26 +26,14 @@ Once you create your OAuth, click download JSON. Drop it into the main directory
 Rename the file **"credentials.json"**
 
 # I dropped in the API, now what? 
-I'm glad you asked. Now goto the config.cfg file in the main directory and change the info in there to match your Target information. Such as your TM ID, and passcode.
+I'm glad you asked. Now goto the config_file.py file in the main directory and change the info in there to match your Target information. Such as your TM ID, and password.
+Also add your Pushover API Key to get notifications when a shift is added or modified
+There is a flag "Headless" which allows you to run this code in the background or on something like a Server.
 
-This application will also add the address of your target into your google calendar (helps with traffic predictions). Change that aswell. 
+In V1 this script would require significantly more amounts of information but now will automatically lookup a store's information and autofill as needed. 
+This was done to have less configuration but also to make it more dynamic since ODTM's will soon be able to work at multiple stores. 
 
-As you all know, Target requires some form of authorization in order to continue to see your information, the Q&A section is super easy to automate for this exact reason.
-
-You will see QKey and QAns (3 questions). qKey is the KEYword that it will search for. 
-Such as 
-qKey = restaurant
-qAns = McDonalds
-etc. Make sure you choose a word that isnt going to be seen in the source code ( Like the word "color" )
-
-Name of the event is what Google Calendar is going to input the event as. I know some people here have multiple jobs so I didn't wat to do with work. The default is "Target". You can change this as you wish.
-
-Time Offset. This part is a bit annoying, the best advice I can give is to look up your city and put your offset there. For example google "minneapolis time offset". You see -05:00
-
-THIS IS IMPORTANT. Do NOT forget to put the 0 first! If you do -5:00 instead of -05:00 the code will NOT work. 
-
-Now that everything is setup. run ```pip install -r requirements.txt``` and it will install all the requirements needed! (surprisingly a very little amount) 
-
+Now that everything is setup. run ```pip install -r requirements.txt``` and it will install all the requirements needed!
 Give it a shot and compile it. 
 
 If it fails. Try to add chromedriver to your windows path. 
