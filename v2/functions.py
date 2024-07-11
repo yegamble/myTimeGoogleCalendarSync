@@ -10,8 +10,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from loguru import logger
 
-logger.info("Initializing Google Calendar... Please Wait.")
-
 logger.info("Changing cwd to file path")
 os.chdir(os.path.dirname(__file__))
 
@@ -34,6 +32,7 @@ if not creds or not creds.valid:
     with open("token.json", "w") as token:
         token.write(creds.to_json())
 service = build("calendar", "v3", credentials=creds)
+
 
 class Store:
     def __init__(self):
