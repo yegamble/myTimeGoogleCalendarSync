@@ -26,7 +26,6 @@ def get_token():
     # Needed for Linux VM.
     options.add_argument("--disable-software-rasterizer")
 
-    # Uncomment these if you have issues where SSO is blocking you.
     # options.add_argument("--no-sandbox")
     # options.add_argument("--disable-dev-shm-usage")
     # options.add_argument("--incognito")
@@ -36,8 +35,9 @@ def get_token():
     # options.add_argument("--disable-dev-shm-usage")
     # options.add_argument("--disable-infobars")
     # options.add_argument("--disable-setuid-sandbox")
-    
-    logger.success("Arguments setup! Starting ChromeDriver")
+
+
+    # logger.success("Arguments setup! Starting ChromeDriver")
     browser = uc.Chrome(use_subprocess=True, options=options, service=service)
     logger.success("ChromeDriver Setup! Starting")
 
@@ -90,16 +90,14 @@ def get_token():
 
     browser.find_element(By.ID, "submit-button").click()
     logger.info("Clicking submit...")
-    time.sleep(5)
+    time.sleep(10)
 
     logger.success("Logged in successfully! Grabbing Bearer token")
     logs = browser.get_log("performance")
     for entry in logs:
         if "Bearer " in str(entry["message"]):
             json_message_data = json.loads(str(entry["message"]))
-            authorization_json = json_message_data["message"]["params"]["request"][
-                "headers"
-            ]["Authorization"]
+            authorization_json = json_message_data["message"]["params"]["request"]["headers"]["Authorization"]
             logger.success("Bearer obtained! Closing...")
             browser.close()
             return authorization_json
