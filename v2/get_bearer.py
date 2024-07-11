@@ -21,7 +21,22 @@ def get_token():
     options.headless = config_file.headless
     # NEEDED FOR HEADLESS
     options.add_argument("--enable-automation")
+    # Needed for Linux VM Headless
+    options.add_argument("--disable-gpu")
+    # Needed for Linux VM.
+    options.add_argument("--disable-software-rasterizer")
 
+    # Uncomment these if you have issues where SSO is blocking you.
+    # options.add_argument("--no-sandbox")
+    # options.add_argument("--disable-dev-shm-usage")
+    # options.add_argument("--incognito")
+    # options.add_argument("--disable-extensions")
+    # options.add_argument("--disable-browser-side-navigation")
+    # options.add_argument("--disable-web-security")
+    # options.add_argument("--disable-dev-shm-usage")
+    # options.add_argument("--disable-infobars")
+    # options.add_argument("--disable-setuid-sandbox")
+    
     logger.success("Arguments setup! Starting ChromeDriver")
     browser = uc.Chrome(use_subprocess=True, options=options, service=service)
     logger.success("ChromeDriver Setup! Starting")
