@@ -12,6 +12,12 @@ from loguru import logger
 
 logger.info("Initializing Google Calendar... Please Wait.")
 
+logger.info("Changing cwd to file path")
+os.chdir(os.path.dirname(__file__))
+
+
+logger.info("Initializing Google Calendar... Please Wait.")
+
 creds = None
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
@@ -28,7 +34,6 @@ if not creds or not creds.valid:
     with open("token.json", "w") as token:
         token.write(creds.to_json())
 service = build("calendar", "v3", credentials=creds)
-
 
 class Store:
     def __init__(self):
