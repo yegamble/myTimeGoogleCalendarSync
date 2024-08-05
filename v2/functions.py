@@ -1,7 +1,10 @@
-import config_file
 import os
 import requests
 import datetime
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from db import engine, SeenShift
 
 # Google Imports
 from google.auth.transport.requests import Request
@@ -10,9 +13,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from loguru import logger
 
+import config_file
+
 logger.info("Changing cwd to file path")
 os.chdir(os.path.dirname(__file__))
-
 
 logger.info("Initializing Google Calendar... Please Wait.")
 
@@ -132,7 +136,7 @@ def get_store_info(store_id):
         "https://redsky.target.com/redsky_aggregations/v1/web/store_location_v1"
         f"?store_id={store_id}"
         f"&key={config_file.API_KEY}",
-        headers=config_file.headers,
+        headers=config_file.get_schedule_headers,
     )
     s = Store()
     # Initialize store object
@@ -167,6 +171,24 @@ def call_wfm(
     return r
 
 
+def call_available_shifts(
+    hdr,
+    start_date,
+    end_date,
+):
+    r = requests.get(
+        f"https://api.target.com/wfm_available_shifts/v1/available_shifts?"
+        f"worker_id={config_file.EMPLOYEE_ID}"
+        f"&start_date={start_date}"
+        f"&end_date={end_date}"
+        f"&location_ids={config_file.STORE_NUMBER}"  # Needs this flag for some reason.
+        f"&key={config_file.API_KEY}",
+        headers=hdr,
+    )
+
+    return r
+
+
 def test_token(test_header):
     # Function to test if Bearer token is valid
     test_request = requests.get(
@@ -179,3 +201,29 @@ def test_token(test_header):
         headers=test_header,
     )
     return test_request
+
+
+def seen_or_record(shift):
+    with Session(engine) as session:
+        logger.info(f"Checking if shift {shift['available_shift_id']} exists")
+        result = session.scalar(
+            select(SeenShift).filter(SeenShift.id == shift["available_shift_id"])
+        )
+
+        if result:
+            logger.info("Shift found, exiting function")
+            return
+        logger.info("Shift not found, adding to database")
+        new_shift = SeenShift(id=shift["available_shift_id"])
+        session.add(new_shift)
+        session.commit()
+
+        dt_start = datetime.datetime.fromisoformat(shift["shift_start"])
+        dt_end = datetime.datetime.fromisoformat(shift["shift_end"])
+
+        notify_user(
+            f"A new {shift['shift_hours']} hour shift has been posted for {dt_start.date()} "
+            f"from {dt_start.strftime('%I:%M %p')} "
+            f"to {dt_end.strftime('%I:%M %p')} for "
+            f"{shift['org_structure']['job']}"
+        )

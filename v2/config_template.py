@@ -3,15 +3,21 @@ import pyotp
 # Global Variables
 EMPLOYEE_ID = 00000000
 PASSWORD = "myPassword"
+STORE_NUMBER = 1375
+# This is just used as a reference for calling available shifts.
 API_KEY = "eb2551e4accc14f38cc42d32fbc2b2ea"
+# you can change this but the default one should work
 PUSHOVER_APP_API_KEY = ""
 PUSHOVER_USER_API_KEY = ""
-# you can change this but the default one should work
-headless = False
+
+# If you don't want this script to scan for posted shifts
+run_posted_shifts = True
+# When obtaining the token, headless means it will run in the background, otherwise it'll be visible to the user
+headless = True
 totp = pyotp.TOTP("")
 # MFA code here.
 
-headers = {
+get_schedule_headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0",
     "Upgrade-Insecure-Requests": "1",
     "DNT": "1",

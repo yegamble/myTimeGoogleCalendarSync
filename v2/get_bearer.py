@@ -36,7 +36,6 @@ def get_token():
     # options.add_argument("--disable-infobars")
     # options.add_argument("--disable-setuid-sandbox")
 
-
     # logger.success("Arguments setup! Starting ChromeDriver")
     browser = uc.Chrome(use_subprocess=True, options=options, service=service)
     logger.success("ChromeDriver Setup! Starting")
@@ -97,7 +96,9 @@ def get_token():
     for entry in logs:
         if "Bearer " in str(entry["message"]):
             json_message_data = json.loads(str(entry["message"]))
-            authorization_json = json_message_data["message"]["params"]["request"]["headers"]["Authorization"]
+            authorization_json = json_message_data["message"]["params"]["request"][
+                "headers"
+            ]["Authorization"]
             logger.success("Bearer obtained! Closing...")
             browser.close()
             return authorization_json

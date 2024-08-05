@@ -9,7 +9,6 @@ logger.add("script.log", rotation="500 MB")  # Automatically rotate too big file
 
 
 def start_get_schedule():
-
     logger.info("Starting start_get_schedule function.")
     logger.info("Reading Configuration file. ")
     config = configparser.ConfigParser()
@@ -179,7 +178,3 @@ def start_get_schedule():
                 )
     logger.success("Script Complete, Exiting Gracefully...")
     exit(0)
-
-
-functions.check_cfg_file()
-start_get_schedule()
