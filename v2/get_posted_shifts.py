@@ -4,12 +4,6 @@ import get_bearer
 import configparser
 from loguru import logger
 
-
-def push_to_postgres():
-    print("not implemented yet")
-    return
-
-
 def get_posted_shifts():
     logger.info("Starting get_posted_shifts function.")
     logger.info("Reading Configuration file. ")
