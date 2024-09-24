@@ -46,6 +46,9 @@ class Store:
 
 
 def notify_user(message):
+    if config_file.PUSHOVER_APP_API_KEY == "" or config_file.PUSHOVER_USER_API_KEY == "":
+        logger.info("Config file for pushover is empty, ignoring")
+        return
     logger.info("Notifying User via Pushover...")
     r = requests.post(
         "https://api.pushover.net/1/messages.json",
