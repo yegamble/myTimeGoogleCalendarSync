@@ -13,47 +13,105 @@ This code will authenticate you, save your token, and call the WFM API which all
 To ensure your shifts are always the most recent onces, on every run it is going to verify any previous shifts added and change them if needed. This makes sure that if a time or a workcentre changes, You're still good to go. 
 
 
-# **READ THIS BEFORE COMPILING**. 
+# **Lets Get Started!**. 
 
+First you need to clone this project. Do this however you'd like.
+Once you've done that, all the working file are going to be in the V2 folder. I wrote V1 when I was new to coding and it is written very very badly. 
+V2 is significantly more efficient . 
 
+# **Google API Key**
+First you need a form of authenticating with Google Calendar
 
 Goto [console.cloud.google.com](https://console.cloud.google.com/)
 
-https://youtu.be/c2b2yUNWFzI?t=225 this is a great video explaining the setting up the OAuth for Google Calendar. Watch till ~10 minutes 
+https://youtu.be/c2b2yUNWFzI?t=225 this is a great video explaining the setting up the OAuth for Google Calendar. Watch till 10:05 minutes and come back to this documnentation 
 
-Once you create your OAuth, click download JSON. Drop it into the main directory of your working directory.
+Welcome back!
+Once you create your OAuth, click download JSON on the right side. 
+Drop it into the main directory of your working directory.
 
 Rename the file **"credentials.json"**
 
-# I dropped in the API, now what? 
-I'm glad you asked. Now goto the config_file.py file in the main directory and change the info in there to match your Target information. Such as your TM ID, and password.
-Also add your Pushover API Key to get notifications when a shift is added or modified
-There is a flag "Headless" which allows you to run this code in the background or on something like a Server.
+# **Setting up your config file** 
+Now, goto the **config_template.py** file in the main directory and change the info in there to match your information. Lets break down what all of these do. 
 
-In V1 this script would require significantly more amounts of information but now will automatically lookup a store's information and autofill as needed. 
-This was done to have less configuration but also to make it more dynamic since ODTM's will soon be able to work at multiple stores. 
 
+# Global Variables
+```EMPLOYEE_ID = 00000000```
+Replace these numbers with your TMID you use at the time clock
+
+```PASSWORD = "myPassword"``` 
+Replace password with your password when you sign into Workday or Target Pay and Benefits. 
+
+```STORE_NUMBER = 1375```
+Replace this with  your 4 digit store number is. 
+Note if your store number is less than 4 digits, like store number 192, make sure you have a leading 0, so in this case it would be 0192
+
+```API_KEY = "eb2551e4accc14f38cc42d32fbc2b2ea"```
+You can change this but the default one should work
+
+```
+PUSHOVER_APP_API_KEY = ""
+PUSHOVER_USER_API_KEY = ""
+```
+These two lines are if you want to get notifications on your phone about any posted shifts AND if you want to get notified that a shift was added to your Google calendar. 
+If you don't want to get these notifications, just leave these two strings empty
+
+If you don't want this script to scan for posted shifts
+```run_posted_shifts = True``` 
+If this is set to true, then it will read the available shifts in your store and notify you via Pushover. You need to setup the pushover APP and USER API key in the above block though. 
+```headless = True``` 
+Headless means that you wont see see Chrome open to obtain the Bearer.
+# The Hardest Part
+
+# ** READ ALL THE STEPS IN THIS SECTION! **
+
+This is the hardest part about the entire setup process about this. As your form of multifactor authentication you need to obtain a One Time Password code. 
+***You need to be on the Target Internal Network for this part of the setup.***
+Once you're at work, log into **https://mylogin.prod.target.com** and there should be a section of setting up an Authenticator App.
+Note: I used a ChromeBox but you should be able to use a myDevice
+
+You can use any kind of regular authenticator app like Authy, 1Password, Okta Verify, Google Authenticator, Etc. 
+(Side note, Target SSO now has 1Password Passkey support so I personally reccomend using 1Password as your primary Password Manager if you haven't already)
+If you don't wanna pay for 1Password you can use anything else in that list. I personally reccomend Authy since it allows you to backup and encrypt your MFA codes. 
+***BEFORE YOU COMPLETE THE ENROLLMENT TAKE A PICTURE OF THE QR CODE!!!!***
+Now complete the enrollment.
+
+Now lets get back to the enrollment. If you convert the QR code to plaintext, it should look something like this ```otpauth://totp/?1234567secret=REALLYLONGTOKEN&issuer=Target%20SSO``` 
+Now we can put this token into our script. 
+```totp = pyotp.TOTP("")```
+In the example, we're going to take the part of the URL that says ```REALLYLONGTOKEN``` and put it into the quotes. 
+It should look like this ```totp = pyotp.TOTP("REALLYLONGTOKEN")```
+
+Finally rename ```config_template.py``` to ```config_file.py``` 
+
+# Lets start!
 Now that everything is setup. run ```pip install -r requirements.txt``` and it will install all the requirements needed!
-Give it a shot and compile it. 
+Give it a shot and run the code by running ```python top.py```. 
 
-If it fails. Try to add chromedriver to your windows path. 
+# Did it error out? 
+If it fails. Try to add chromedriver to your OS path.
+For some reason, some users are having issues with SQLAlchemy, if the code is complaining about SQLAlchemy, ```pip install SQLAlchemy``` in your environment. Should work  
 
 # Why is it asking for my Google?
 
-Since we are using the Google Calendar API we need to go thru google to get the required tokens to use those APIs.
+You should see something along the lines of this. 
+![image](https://github.com/user-attachments/assets/25518b7d-d259-47cb-8b08-6347f48330f2)
+Its basically asking you which account you want to link to the script to push calendar events to 
 
 # IS THIS A WIRUS?
+If you have not verified your application (which is not required, theres no real reason to verify in our case), you will see a message like this. 
+![image](https://github.com/user-attachments/assets/b54666f8-5209-4c61-8d9a-92295da0fe80)
 
-You will see this screen
+All this is saying is that the application that you made is still in testing mode. Google has not verified verifcation is if you want to make this a widespread thing where random users will use this. You're more than welcome to verify it thru google but you're wasting your time. Hit show advanced and then hit ```Go to [whatever you named your Cloud Project] (unsafe)```. 
 
-![2022-10-15 02_17_20-Sign in - Google Accounts](https://user-images.githubusercontent.com/37282503/195978955-6b12cbca-b991-4bfa-ae2e-4012f044bb0c.png)
-
-All this is saying is that the application that you made is still in testing mode. Google has not verified verifcation is if you want to make this a widespread thing where random users will use this. You're more than welcome to verify it thru google but you're wasting your time. Hit continue. 
+All this code is open source, if you don't feel comfortable with hitting that button, you can go through this code line by line to ensure that it is safe. 
 
 And you're done!
 
-In theory your Google Calendar is getting filled with your target shifts. 
+In theory your Google Calendar is getting filled with your target shifts!
 
 
-
-This program is fully supported in headless mode! If you want to run this program in headless mode change the headless button in the config and you're all set! 
+# Having issues?
+If you're having issues feel free to shoot me a message on discord ```versiondefect``` or just make a issue / open a new discussion post. 
+Happy planning!
