@@ -27,6 +27,11 @@ Goto [console.cloud.google.com](https://console.cloud.google.com/)
 https://youtu.be/c2b2yUNWFzI?t=225 this is a great video explaining the setting up the OAuth for Google Calendar. Watch till 10:05 minutes and come back to this documnentation 
 
 Welcome back!
+
+Quick Thing, While you're in the cloud console, Goto API & Services, OAuth Consent Screen, and switch your app from "Testing" to "Production"
+![image](https://github.com/user-attachments/assets/0d396f76-20e1-491e-8cab-8d58e555c8cb)
+Testing tokens last a week while Production Tokens last alot longer ( I think permenant? Hard to say, many conflicting answers online ) 
+
 Once you create your OAuth, click download JSON on the right side. 
 Drop it into the main directory of your working directory.
 
@@ -103,7 +108,7 @@ Its basically asking you which account you want to link to the script to push ca
 If you have not verified your application (which is not required, theres no real reason to verify in our case), you will see a message like this. 
 ![image](https://github.com/user-attachments/assets/b54666f8-5209-4c61-8d9a-92295da0fe80)
 
-All this is saying is that the application that you made is still in testing mode. Google has not verified verifcation is if you want to make this a widespread thing where random users will use this. You're more than welcome to verify it thru google but you're wasting your time. Hit show advanced and then hit ```Go to [whatever you named your Cloud Project] (unsafe)```. 
+All this is saying is that the application that you made has not been verified. Google this is more if you'd want to make something like this a public thing, like good integration in your app. You're more than welcome to verify it thru google but you're wasting your time. Hit show advanced and then hit ```Go to [whatever you named your Cloud Project] (unsafe)```. 
 
 All this code is open source, if you don't feel comfortable with hitting that button, you can go through this code line by line to ensure that it is safe. 
 
