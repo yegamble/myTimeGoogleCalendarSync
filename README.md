@@ -2,7 +2,7 @@
 
 You can authenticate by using the 2FA authenticator code
 
-A simple program to copy my shifts from Target myTime to Google Calendar. 
+A simple program to copy from Target myTime to Google Calendar. 
 
 Hello all! I am using the Google Calendar API for this. If you would like to use this code. You MUST be a Google Cloud developer (its free) and get a Google Auth Key. 
 
